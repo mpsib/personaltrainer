@@ -24,7 +24,12 @@ export default function Delete(props){
     const handleDelete = () => {
         handleClose();
         setDialogContent('');
-        props.deleteItem(props.params.data.links[0].href);
+        if(props.params.data.links){
+            props.deleteItem(props.params.data.links[0].href);
+        } else if(props.params.data.activity){
+            props.deleteItem('https://customerrest.herokuapp.com/api/trainings/'+props.params.data.id);
+        }
+        
     }
 
 
