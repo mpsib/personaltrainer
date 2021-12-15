@@ -50,27 +50,22 @@ function App() {
                 'aria-labelledby': 'basic-button',
               }}
             >
+              
               <MenuItem onClick={handleClose}>
-                <Link to="/"><Button variant="text" color="primary">Home</Button></Link>{''}
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Link to="/customers"><Button variant="text" color="primary">Customers</Button></Link>{''}
+                <Link to="/"><Button variant="text" color="primary">Customers</Button></Link>{''}
               </MenuItem>
               <MenuItem onClick={handleClose}>
                 <Link to="/trainings"><Button variant="text" color="primary">Trainings</Button></Link>{''}
               </MenuItem>
             </Menu>
 
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               PersonalTrainer
-            </Typography>
           </Toolbar>
         </AppBar>
 
       
         <Routes>
-          <Route path="/" element ={ <Home /> } />
-          <Route path="/customers" element ={ <Customers /> } />
+          <Route path="/" element ={ <Customers /> } />
           <Route path="/trainings" element ={ <Trainings /> } />
         </Routes>
       </BrowserRouter>
