@@ -4,25 +4,46 @@ import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
-import { Snackbar } from '@mui/material';
+import { Button, Snackbar } from '@mui/material';
 
 import { format as dateFormat } from 'date-fns';
 import Delete from './delete';
+import Calendar from './calendar';
 
 export default function Trainings(){
     const [trainings, setTrainings] = useState([]);
+    const [events, setEvents] = useState([]);
     const [snackNotificationOpen, setSnackNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
+    const [calendarOpen, setCalendarOpen] = useState(false);
 
     useEffect( ()=>{
         fetchTrainings();
     }, []);
 
+    var _ = require('lodash');
+
     const fetchTrainings = () => {
         fetch( 'https://customerrest.herokuapp.com/gettrainings' )
             .then( response => response.json() )
-            .then( data => setTrainings( data ) )
+            .then( data => {
+                setTrainings( data );
+                setEvents(createEvents( data ));
+            } )
             .catch( err => console.error(err) );
+    }
+
+    const createEvents = (data) => {
+        let array = [];
+        for (let i = 0; i < data.length; i++){
+            let event = {
+                title: data[i].activity,
+                start: new Date(data[i].date),
+                end: new Date(new Date(data[i].date).getTime() + data[i].duration*60000)
+            };
+            array = _.concat(array, event);
+        }
+        return array;
     }
 
     const deleteTraining = (url) => {
@@ -73,28 +94,45 @@ export default function Trainings(){
             cellRendererFramework: params => 
                 <Delete params={params} deleteItem={deleteTraining} />
         },
-    ]
+    ];
 
-    return (
-        <React.Fragment>
-            <h2>Trainings</h2>
-            <div className='ag-theme-material' style={{height: 600, width: 1250, margin:'auto'}}>
-                <AgGridReact
-                    columnDefs={gridColumns}
-                    rowData={trainings}
-                    pagination={true}
-                    paginationAutoPageSize={true}
-                    rowSelection='single'
-                    animateRows={true}
-                    suppressMovableColumns={true}
+    const handleCalendarButton = () => {
+        setCalendarOpen(!calendarOpen);
+    }
+
+
+    if(!calendarOpen){
+        return (
+            <React.Fragment>
+                <h2>Trainings</h2>
+                <Button onClick={handleCalendarButton}>Show Calendar</Button>
+                <div className='ag-theme-material' style={{height: 600, width: 1250, margin:'auto'}}>
+                    <AgGridReact
+                        columnDefs={gridColumns}
+                        rowData={trainings}
+                        pagination={true}
+                        paginationAutoPageSize={true}
+                        rowSelection='single'
+                        animateRows={true}
+                        suppressMovableColumns={true}
+                    />
+                </div>
+                <Snackbar
+                    open={snackNotificationOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setSnackNotificationOpen(false)}
+                    message={notificationMessage}
                 />
+            </React.Fragment>
+        );
+    } else {
+        return (
+            <div>
+                <h2>Trainings</h2>
+                <Button onClick={handleCalendarButton}>Show List</Button>
+                <Calendar events={events}/>
             </div>
-            <Snackbar
-                open={snackNotificationOpen}
-                autoHideDuration={3000}
-                onClose={() => setSnackNotificationOpen(false)}
-                message={notificationMessage}
-            />
-        </React.Fragment>
-    );
+        );
+    }
+    
 }
