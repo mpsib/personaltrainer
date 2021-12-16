@@ -141,12 +141,8 @@ export default function Customers(){
     return (
         <React.Fragment>
             <h2>Customers</h2>
-            <table style={{margin:'auto'}}>
-                <tr>
-                    <td><AddCustomer addCustomer={addCustomer}/></td>
-                    <td><CsvExport customers={customers}/></td>
-                </tr>
-            </table>
+            <AddCustomer addCustomer={addCustomer}/>
+            <CsvExport customers={customers}/>
             
             
             <div className='ag-theme-material' style={{height: 600, width: 1250, margin:'auto'}}>

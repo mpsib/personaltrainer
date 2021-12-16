@@ -36,7 +36,7 @@ export default function AddCustomer(props){
     }
 
     return (
-        <div>
+        <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>Add new customer</Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Give values to a new customer</DialogTitle>
@@ -110,6 +110,6 @@ export default function AddCustomer(props){
                     <Button onClick={handleSave}>Add</Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </React.Fragment>
     );
 }

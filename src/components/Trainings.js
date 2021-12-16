@@ -9,13 +9,14 @@ import { Button, Snackbar } from '@mui/material';
 import { format as dateFormat } from 'date-fns';
 import Delete from './delete';
 import Calendar from './calendar';
+import Statistics from './statistics';
 
 export default function Trainings(){
     const [trainings, setTrainings] = useState([]);
     const [events, setEvents] = useState([]);
     const [snackNotificationOpen, setSnackNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
-    const [calendarOpen, setCalendarOpen] = useState(false);
+    const [pageState, setPageState] = useState('list');
 
     useEffect( ()=>{
         fetchTrainings();
@@ -96,16 +97,17 @@ export default function Trainings(){
         },
     ];
 
-    const handleCalendarButton = () => {
-        setCalendarOpen(!calendarOpen);
+    const handlePageStateButton = (page) => {
+        setPageState(page);
     }
 
 
-    if(!calendarOpen){
+    if(pageState === 'list'){
         return (
             <React.Fragment>
                 <h2>Trainings</h2>
-                <Button onClick={handleCalendarButton}>Show Calendar</Button>
+                <Button variant='outlined' onClick={() => handlePageStateButton('calendar')}>Calendar</Button>
+                <Button variant='outlined' onClick={() => handlePageStateButton('statistics')}>Statistics</Button>
                 <div className='ag-theme-material' style={{height: 600, width: 1250, margin:'auto'}}>
                     <AgGridReact
                         columnDefs={gridColumns}
@@ -125,12 +127,22 @@ export default function Trainings(){
                 />
             </React.Fragment>
         );
-    } else {
+    } else if (pageState === 'calendar'){
         return (
             <div>
                 <h2>Trainings</h2>
-                <Button onClick={handleCalendarButton}>Show List</Button>
+                <Button variant='outlined' onClick={() => handlePageStateButton('list')}>List</Button>
+                <Button variant='outlined' onClick={() => handlePageStateButton('statistics')}>Statistics</Button>
                 <Calendar events={events}/>
+            </div>
+        );
+    } else if (pageState === 'statistics'){
+        return (
+            <div>
+                <h2>Trainings</h2>
+                <Button variant='outlined' onClick={() => handlePageStateButton('list')}>List</Button>
+                <Button variant='outlined' onClick={() => handlePageStateButton('calendar')}>Calendar</Button>
+                <Statistics trainings={trainings}/>
             </div>
         );
     }
