@@ -10,6 +10,7 @@ import AddCustomer from './addCustomer';
 import Delete from './delete';
 import AddTraining from './addTraining';
 import EditCustomer from './editCustomer';
+import CsvExport from './csvExport';
 
 
 
@@ -133,13 +134,21 @@ export default function Customers(){
             cellRendererFramework: params => 
                 <Delete params={params} deleteItem={deleteCustomer} />
         },
-    ]
+    ];
+
+    
 
     return (
         <React.Fragment>
             <h2>Customers</h2>
-            <AddCustomer addCustomer={addCustomer}/>
-
+            <table style={{margin:'auto'}}>
+                <tr>
+                    <td><AddCustomer addCustomer={addCustomer}/></td>
+                    <td><CsvExport customers={customers}/></td>
+                </tr>
+            </table>
+            
+            
             <div className='ag-theme-material' style={{height: 600, width: 1250, margin:'auto'}}>
                 <AgGridReact
                     columnDefs={gridColumns}
